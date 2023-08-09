@@ -1,1 +1,1 @@
-​
+// adding with those no of elements that when added with current will produce a pair like 40 and 20 , 100 and 20
