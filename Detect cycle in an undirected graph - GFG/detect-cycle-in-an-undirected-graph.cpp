@@ -8,31 +8,20 @@ class Solution {
     // Approach if a node is already visited and it's not the parent of 
     // current node then it means this node has been visited by some node
     // already so there is cycle
-    bool findCycle(int src, int vis[], vector<int> adj[]){
-        vis[src] = 1;
-    //             node parent(from where it came from)
-        queue<pair<int, int>> q;
-        q.push({src, -1});
-        
-        
-        while(!q.empty()){
-            int node = q.front().first;
-            int parent = q.front().second;
-            q.pop();
-            
-            for(auto it : adj[node]){
-               
-                if(!vis[it]){
-                    vis[it] = 1;
-                    q.push({it, node});
-                }
-                else if(vis[it] && it != parent){
+    bool findCycle(int src, int parent, int vis[], vector<int> adj[]){
+         vis[src] = 1;
+         
+         for(auto it : adj[src]){
+             if(!vis[it]){
+                if(findCycle(it,src, vis, adj)){
                     return true;
                 }
-            }
-        }
-        return false;
-        
+             }
+             else if( it != parent){
+                 return true;
+             }
+         }
+         return false;
     }
     
   public:
@@ -45,7 +34,7 @@ class Solution {
         
         for(int i=0; i<V; i++){  // checking for all components
             if(!vis[i]){
-                if(findCycle(i, vis,adj)){
+                if(findCycle(i, -1, vis,adj)){
                     return true;
                 }
             }
