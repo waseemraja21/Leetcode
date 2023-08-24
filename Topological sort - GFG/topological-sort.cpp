@@ -3,51 +3,44 @@
 using namespace std;
 
 // } Driver Code Ends
-class Solution{
-
-    void topoDfs(int node, vector<int>& vis, vector<int> adj[], stack<int>& st){
-       
-        vis[node]=1;
-        
-        
-        for(auto it : adj[node]){
-            if(!vis[it]){
-                topoDfs(it, vis, adj, st);
-            }
-        }
-        st.push(node);// pushing the node that has ended
-    }
-
+class Solution
+{
 	public:
-	//Function to return list containing vertices in Topological order. 
-	// in topological ordering if there is an edge between u and v
-	// then in topo ordere u should be before v
+	// Kahns Algorith
+	// store indegrees of every vertex
+	// store nodes in queue which have 0 indegrees
+	// for each node in adjacent list decrease indegrees of those nodes to which
+	// current is heading
+	// store nodes in answer vector
 	vector<int> topoSort(int V, vector<int> adj[]) 
 	{
-	    vector<int> ans;
-	    // the element that ends first means that it is not directed to any other
-	    // vertex is pushed into stack first so that in sequence it comes after any
-	    // other vertex
-	    // eg 1->2->3->4->5
-	    //             |
-	    //             6
-	    // in stack i will be storing [1,2,3,4,5,6] poping 1 , 2 ,3 first in 
-	    // that order bcz 5 and 6 ends first pushing them first
-	    stack<int> st;
-	    
-	    vector<int> vis(V,0);
-	    
+	    vector<int> indegree(V,0);
 	    for(int i=0; i<V; i++){
-	        if(!vis[i]){
-	            topoDfs(i, vis, adj, st);
+	        for(auto it : adj[i]){
+	            indegree[it]++;
 	        }
 	    }
-	    while(!st.empty()){
-	        ans.push_back(st.top());
-	        st.pop();
+	    
+	    queue<int> q;
+	    for(int i=0; i<V; i++){
+	        if(indegree[i]==0){
+	            q.push(i);
+	        }
+	    }
+	    vector<int> ans;
+	    
+	    while(!q.empty()){
+	        int node=q.front();
+	        q.pop();
+	        
+	        ans.push_back(node);
+	        
+	        for(auto it : adj[node]){
+	            indegree[it]--;
+	            if(indegree[it]==0) q.push(it);
+	        }
 	    }
 	    return ans;
-	    
 	}
 };
 
@@ -99,5 +92,4 @@ int main() {
     
     return 0;
 }
-// } Driver Code Ends	    // the element that becomes isolated first mea
-
+// } Driver Code Ends
