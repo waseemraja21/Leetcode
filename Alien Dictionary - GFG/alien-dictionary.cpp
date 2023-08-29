@@ -9,16 +9,7 @@ using namespace std;
 
 class Solution{
     
-    vector<int> topoSort(vector<int> adj[], int K){
-        
-        int indegree[K]={0};
-        
-        for(int i=0; i<K; i++){
-            for(auto it : adj[i]){
-                indegree[it]++;
-                
-            }
-        }
+    vector<int> topoSort(vector<int> adj[], vector<int> indegree, int K){
         
         queue<int> q;
         for(int i=0; i<K; i++){
@@ -54,6 +45,7 @@ class Solution{
         
     
         vector<int> adj[K];
+        vector<int> indegree(K,0);
         // building an adjacency list of given chars by converting them to equivalent int
         // like 1 for a, 2 for b, 25 for z;
         //
@@ -68,6 +60,7 @@ class Solution{
             for(int ptr = 0; ptr<len; ptr++){
                 if(s1[ptr] != s2[ptr]){// got first different char
                     adj[s1[ptr]-'a'].push_back(s2[ptr]-'a');
+                    indegree[s2[ptr]-'a']++;
                     
                     break;
                 }
@@ -76,7 +69,7 @@ class Solution{
         }
     
         
-        vector<int> order = topoSort(adj, K);// return topological order of chars in equivalent int form
+        vector<int> order = topoSort(adj,indegree, K);// return topological order of chars in equivalent int form
         string ans = "";
         for(auto it : order){
             ans += char(it+'a');
