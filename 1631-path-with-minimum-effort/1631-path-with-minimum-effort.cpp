@@ -1,40 +1,43 @@
+
 class Solution {
 public:
     int minimumEffortPath(vector<vector<int>>& heights) {
+        int m = heights.size();  // Number of rows
+        int n = heights[0].size();  // Number of columns
         
-        int m = heights.size();// no of rows
-        int n = heights[0].size(); // no of coloumns
-        
-        vector<vector<int>> dist(m, vector<int>(n,1e9)); // to store abs diff of heights (minimum)
+        vector<vector<int>> dist(m, vector<int>(n, 1e9));  // To store the absolute difference of heights (minimum effort)
         dist[0][0] = 0;
         
-        queue<pair<int,pair<int,int>>> q; // to store row and col of element;
-        q.push({0,{0,0}});
+        // Min heap to store (effort, {row, col}) pairs, ordered by effort
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> q;
+        q.push({0, {0, 0}});  // Push the starting point with zero effort
         
-        int dRow[4] = {0,0,-1,1};// left right up down
-        int dCol[4] = {-1,1,0,0};
+        int dRow[4] = {0, 0, -1, 1};  // Left, right, up, down
+        int dCol[4] = {-1, 1, 0, 0};
         
-        while(!q.empty()){
-            
-            int row = q.front().second.first;
-            int col = q.front().second.second;
-            int diff = q.front().first;
+        while (!q.empty()) {
+            auto it = q.top();
+            int row = it.second.first;
+            int col = it.second.second;
+            int diff = it.first;
             
             q.pop();
             
-            for(int i = 0; i<4; i++){
+            if (row == m - 1 && col == n - 1) return diff;  // Reached the destination
+            
+            for (int i = 0; i < 4; i++) {
                 int nRow = row + dRow[i];
                 int nCol = col + dCol[i];
                 
-                if(nRow >= 0 && nRow < m && nCol >= 0 && nCol < n){
-                    int newEffort = max(abs(heights[nRow][nCol]-heights[row][col]), diff);
-                    if(newEffort < dist[nRow][nCol]){
-                        dist[nRow][nCol] = newEffort;
-                        q.push({newEffort,{nRow, nCol}});
+                if (nRow >= 0 && nRow < m && nCol >= 0 && nCol < n) {
+                    int newEffort = max(abs(heights[nRow][nCol] - heights[row][col]), diff);
+                    if (newEffort < dist[nRow][nCol]) {
+                        dist[nRow][nCol] = newEffort;  // Update the minimum effort to reach this cell
+                        q.push({newEffort, {nRow, nCol}});  // Add it to the priority queue for exploration
                     }
                 }
             }
         }
-        return dist[m-1][n-1];
+        return 0;  // Default return (should not reach here if a path exists)
     }
 };
