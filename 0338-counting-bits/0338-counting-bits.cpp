@@ -20,9 +20,8 @@ public:
             int j =2*i;
             while(j <= n && ans[j] == 0){
                 ans[j] = bits;
-                if(i==2 && j+1 <= n){
-                    ans[j+1] = bits+1;
-                }
+                if(j+1 <= n) ans[j+1] = bits+1;
+               
                 j=j*2;
             }
         }
