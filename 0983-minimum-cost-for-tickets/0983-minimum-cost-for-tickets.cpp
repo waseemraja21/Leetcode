@@ -5,25 +5,25 @@ class Solution {
         
         if(dp[idx] != -1) return dp[idx];
         
-        int ans = INT_MAX;
-        for(int k=0; k<3; k++){         // we have three choices
-            int j=idx;                  // this will store index of next day when we will start
-                                        // journy
-            int d = (k==0) ? 1 :((k==1) ? 7 : 30);  // no of days we can pass
-            int c=costs[k];                         // cost of traveling for particular day
-            
-            
-            //e.g, 1+7 we will reach 8 and we can't pass 8, for that we need to take another pass
-            // out of bounds
-            while(j < days.size() && days[j] < days[idx]+d){
-                j++;
-            }
-            
-            // adding current cost and starting from next like 8
-            
-            ans=min(ans, c+findCost(j, days, costs, dp, n)); 
-        }
+        // three options 1 7 30
         
+        int j=idx;
+        while(j < n && days[j] < days[idx]+1)j++;
+        int op1 = costs[0]+findCost(j, days, costs, dp, n);
+        
+        // op2
+        j=idx;
+        while(j < n && days[j] < days[idx]+7)j++;
+        int op2 = costs[1]+findCost(j, days, costs, dp, n);
+        
+        //op3
+        j=idx;
+        while(j < n && days[j] < days[idx]+30)j++;
+        int op3 = costs[2]+findCost(j, days, costs, dp, n);
+        
+        
+        int ans = INT_MAX;
+        ans = min(op1, min(op2, op3));
         return dp[idx] = ans;
     }
     
