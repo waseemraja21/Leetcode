@@ -18,23 +18,26 @@ class Solution {
 public:
     int lengthOfLIS(vector<int>& nums) {
         
-        int n=nums.size();
-        vector<vector<int>> dp(n+1, vector<int>(n+1, 0));
+        int n=nums.size();  
+        vector<int> prev(n+1, 0);
         
         for(int idx = n-1; idx >=0; idx--){
+            vector<int> curr(n+1, 0);
             for(int prevInd = idx-1; prevInd >= -1; prevInd--){
                 
                 int take = 0;
                 if(prevInd == -1 || nums[idx] > nums[prevInd]){
-                    take = 1+dp[idx+1][idx+1];
+                    take = 1+prev[idx+1];
                 }
                 
-                int notTake = dp[idx+1][prevInd+1];
+                int notTake = prev[prevInd+1];
                 
-                dp[idx][prevInd+1] = max(take, notTake);
+                curr[prevInd+1] = max(take, notTake);
+                
             }
+            prev=curr;
         }
-        return dp[0][0];
+        return prev[0];
 
     }
 };
