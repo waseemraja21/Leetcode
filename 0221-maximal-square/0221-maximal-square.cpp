@@ -1,22 +1,5 @@
 class Solution {
     
-    int solve(int row, int col, vector<vector<char>>& matrix, vector<vector<int>>& dp, int m, int n){
-        if(row >= m || col >= n) return 0;
-        
-        if(dp[row][col] != -1) return dp[row][col];
-        
-        // i have three options to go
-        int ans = 0;
-        int down = solve(row+1, col, matrix, dp, m, n);
-        int right = solve(row, col+1, matrix, dp, m, n);
-        int diag = solve(row+1, col+1, matrix, dp, m, n);
-        
-        if(matrix[row][col] == '1'){
-            ans =  1+min(diag, min(down, right));
-        }
-        return dp[row][col] = ans;
-    }
-    
 public:
     int maximalSquare(vector<vector<char>>& matrix) {
         //Approaach:
@@ -35,16 +18,23 @@ public:
         int m=matrix.size();
         int n=matrix[0].size();
         
-        vector<vector<int>> dp(m, vector<int>(n, -1));
-        
-        
-        solve(0, 0, matrix, dp, m, n);
+        vector<vector<int>> dp(m+1, vector<int>(n+1, 0));
         
         int ans = -1e9;
-        for(int i=0; i<m; i++){
-            for(int j=0; j<n; j++){
-                ans = max(dp[i][j], ans);
+        
+        for(int row = m-1; row >= 0; row--){
+            for(int col = n-1; col >= 0; col--){
                 
+                // three options
+                int down = dp[row+1][col];
+                int right = dp[row][col+1];
+                int diag = dp[row+1][col+1];
+                
+                if(matrix[row][col] == '1'){
+                    dp[row][col] = 1+min(diag, min(right, down));
+                    
+                }
+                ans = max(dp[row][col], ans);
             }
         }
         return ans*ans;
